@@ -19,13 +19,13 @@ addpath './Code/ICP'
 
 landmarks = initializeLandmarks(poses, observations);
 landmarks
-[poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks, observations, 1);
+[poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks, observations, 10);
 
 figure();
 plot(chi_stats)
 
 figure();
-%p_gt = drawPoses(poses_gt, 'b*');
+p_gt = drawPoses(poses_gt, 'b*');
 %p = drawPoses(poses, 'g*');
 
 for i=1:size(landmarks_opt, 2)
@@ -36,10 +36,10 @@ end
 l_gt = drawLandmarks(landmarks_gt, 'b*');
 %l = drawLandmarks(landmarks, 'g*');
 
-%p_opt = drawPoses(poses_opt, 'r*');
-l_opt = drawLandmarks(landmarks_opt, 'r*');
+p_opt = drawPoses(poses_opt, 'r*');
+%l_opt = drawLandmarks(landmarks_opt, 'r*');
 
-drawLandCorrespondences(landmarks_gt, landmarks_opt)
+%drawLandCorrespondences(landmarks_gt, landmarks_opt)
 
 %legend([p_gt, p, p_opt, l_gt, l, l_opt], {"Poses Ground truth", "Poses initial guess", "Poses Opt", "Landmark ground truth", "Landmark initial guess", "Landmark Opt"})
 

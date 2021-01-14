@@ -1,7 +1,8 @@
-function [poses, landmarks] = applyIncrements(dx, poses, landmarks, pose_index2id, pose_id2index, landmark_index2id, landmark_id2index)
+function [poses, landmarks] = applyIncrements(X, dx)
 
-    N = size(pose_index2id, 2);
-    M = size(landmark_index2id, 2);
+    global pose_index2id, pose_id2index, landmark_index2id, landmark_id2index
+    global N;
+    global M;
 
     for i=1:N
         poses(i).x = poses(i).x + dx(2*i-1);

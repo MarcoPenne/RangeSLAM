@@ -1,5 +1,5 @@
-function out = measurement(pose_r, landmark, obs)
-  out.pose_r = pose_r;
-  out.landmark = landmark;
+function out = measurement(pose_id, landmark_id, obs)
+  out.pose_id = pose_id;
+  out.landmark_id = landmark_id;
   out.obs = obs;
 end
