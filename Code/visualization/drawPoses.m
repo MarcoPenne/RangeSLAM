@@ -9,7 +9,7 @@ function point = drawPoses(poses, color)
     hold on
     
     point = plot(xes, yes, color, "linewidth", 2);
-    plot([xes], [yes], 'r');
+    plot([xes], [yes], color(1:1));
         
     %for i=1:size(poses, 2)
     %    hold on;
