@@ -6,8 +6,9 @@ function [dx, chi_tot] = solveSingleICP(X, measurements)
 
     H = zeros(N*3+M*2, N*3+M*2);
     b = zeros(N*3+M*2, 1);
-
-    kernel_threshold = 10000000;
+    large_value = 1e9;
+    
+    kernel_threshold = 10;
     chi_tot = 0;
     val_image = zeros(N*3+M*2, N*3+M*2);
     for i=1:size(measurements, 2)
@@ -16,8 +17,8 @@ function [dx, chi_tot] = solveSingleICP(X, measurements)
         
         chi = e'*e;
         if (chi>kernel_threshold)
-      	    e*=sqrt(kernel_threshold/chi);
-      	    chi=kernel_threshold;
+      	    %e*=sqrt(kernel_threshold/chi);
+      	    %chi=kernel_threshold;
             chi_tot = chi_tot + chi;
             O = 1;
             H = H + J'*O*J;
@@ -28,6 +29,7 @@ function [dx, chi_tot] = solveSingleICP(X, measurements)
             H = H + J'*O*J;
             b = b + J'*O*e;
         end
+        H(1:3, 1:3) = eye(3)*large_value;
         
 
         %measurements(i)
