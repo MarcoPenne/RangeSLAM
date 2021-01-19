@@ -1,4 +1,4 @@
-function [e, J] = errorAndJacobian(X, measurement)
+function [e, J] = errorAndJacobianMeasurement(X, measurement)
 
     global pose_index2id pose_id2index landmark_index2id landmark_id2index
     global N;
