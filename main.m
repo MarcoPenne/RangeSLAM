@@ -20,7 +20,7 @@ addpath './Code/ICP'
 landmarks = initializeLandmarks(poses, observations);
 landmarks
 [poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks, observations, transitions, 20);
-
+[poses_opt, landmarks_opt] = rotateAndTranslate(poses_opt, landmarks_opt)
 
 figure();
 plot(chi_stats)
@@ -46,7 +46,7 @@ drawLandCorrespondences(landmarks_gt, landmarks_opt, [0.66, 0.66, 0.66])
 drawLandCorrespondences(landmarks, landmarks_opt, [0.27, 0.27, 0.27])
 
 
-legend([p_gt, p, p_opt, l_gt, l, l_opt], {"Poses Ground truth", "Initial Poses", "Poses Optimizated", "Landmarks ground truth", "Initial Landmarks", "Landmarks Optizated"})
+legend([p, p_opt, p_gt, l, l_opt, l_gt], {"Initial Poses", "Poses Optimizated", "Poses Ground truth", "Initial Landmarks", "Landmarks Optizated", "Landmarks ground truth"})
 
 
 %drawnow;
