@@ -1,4 +1,4 @@
-function [poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks, observations, n_iterations)
+function [poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks, observations, transitions, n_iterations)
 
     % new_poses = [];
     % new_landmarks = [];
@@ -67,7 +67,7 @@ function [poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks,
     for i=1:n_iterations
         printf("iteration %d\n",i)
         
-        [dx, chi] = solveSingleICP(X, measurements);
+        [dx, chi] = solveSingleICP(X, measurements, transitions, i);
         chi_stats(end+1) = chi;
         X = boxPlus(X, dx);
     end
