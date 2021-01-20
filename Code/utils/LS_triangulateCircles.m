@@ -49,38 +49,6 @@ function point = LS_triangulateCircles(centers, radii)
     end
     X_min = X;
 
-    X = center_max';
-    for i=1:n_it
-        H = zeros(2, 2);
-        b = zeros(2, 1);
-        chi_max = 0;
-        for i=1:size(centers,1)
-            xc = centers(i,1);
-            yc = centers(i,2);
-            C = [xc; yc];
-            r = radii(i);
-            if norm(X - C)>0
-                e = norm(X - C) - radii(i);
-                J = [(-xc+X(1))/norm(X - C),  (-yc+X(2))/norm(X - C)];
-
-                H = H + J'*J;
-                b = b + J'*e;
-                chi_max = chi_max + e'*e;
-            else
-                e = norm(X - C) - radii(i);
-                J = [1000,  1000];
-
-                H = H + J'*J;
-                b = b + J'*e;
-                chi_max = chi_max + e'*e;
-            end
-        end
-        dx = -H\b;
-        dx = 0.1*dx;
-        X = X+dx;
-    end
-    X_max = X;
-
     %if chi_min < chi_max
         point = X_min';
     %else
