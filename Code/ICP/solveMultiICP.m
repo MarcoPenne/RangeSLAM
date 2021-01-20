@@ -73,6 +73,7 @@ function [poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks,
     end
     figure();
     imshow(image);
+    title('H matrix')
     
     [poses_opt, landmarks_opt] = extractPosesAndLandmarksFromState(X);
     

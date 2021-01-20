@@ -56,7 +56,7 @@ function [dx, chi_tot, image] = solveSingleICP(X, measurements, transitions, ite
         b(pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3) += Ji'*O*e;
         b(pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3) += Jj'*O*e;
     end
-    image = H~=0;
+    image = H==0;
     %det(H)
     %figure();
     %imshow(val_image)

@@ -26,8 +26,10 @@ landmarks_LS = LS_landmarks_initialization(poses, observations);
 %poses_opt
 figure();
 plot(chi_stats)
+title('Error during iterations');
 
 figure();
+title('Map and trajectory');
 fig = gcf ();
 set(fig, 'units', 'normalized', 'position', [0.125 0 0.75 1])
 p_gt = drawPoses(poses_gt, 'g*');
