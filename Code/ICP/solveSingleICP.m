@@ -1,4 +1,4 @@
-function [dx, chi_tot] = solveSingleICP(X, measurements, transitions, iteration)
+function [dx, chi_tot, image] = solveSingleICP(X, measurements, transitions, iteration)
 
     global pose_index2id pose_id2index landmark_index2id landmark_id2index
     global N;
@@ -13,8 +13,10 @@ function [dx, chi_tot] = solveSingleICP(X, measurements, transitions, iteration)
     val_image = zeros(N*3+M*2, N*3+M*2);
     for i=1:size(measurements, 2)
         %printf("Processing measurement %d\n", i);
-        [e, J] = errorAndJacobianMeasurement(X, measurements(i));
-        
+        [e, Jr, Jl] = errorAndJacobianMeasurement(X, measurements(i));
+        pose_id = measurements(i).pose_id;
+        land_id = measurements(i).landmark_id;
+
         chi = e'*e;
         chi_tot = chi_tot + chi;
         value = 2 * exp(0.2*(iteration-10));
@@ -22,8 +24,12 @@ function [dx, chi_tot] = solveSingleICP(X, measurements, transitions, iteration)
             value=4;
         end
         O = value;
-        H = H + J'*O*J;
-        b = b + J'*O*e;
+        H(pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3, pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3) += Jr'*O*Jr;
+        H(pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3, 3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2) += Jr'*O*Jl;
+        H(3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2, pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3) += Jl'*O*Jr;
+        H(3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2, 3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2) += Jl'*O*Jl;
+        b(pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3) += Jr'*O*e;
+        b(3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2) += Jl'*O*e;
         
         %H(1:3, 1:3) = eye(3)*large_value;
         
@@ -32,7 +38,9 @@ function [dx, chi_tot] = solveSingleICP(X, measurements, transitions, iteration)
     end
 
     for i=1:size(transitions, 2)
-        [e, J] = errorAndJacobianTransition(X, transitions(i));
+        [e, Ji, Jj] = errorAndJacobianTransition(X, transitions(i));
+        pose_id_i = transitions(i).id_from;
+        pose_id_j = transitions(i).id_to;
         
         chi = e'*e;
         chi_tot = chi_tot + chi;
@@ -41,10 +49,14 @@ function [dx, chi_tot] = solveSingleICP(X, measurements, transitions, iteration)
         %    value=0;
         %end
         O = value * eye(3);
-        H = H + J'*O*J;
-        b = b + J'*O*e;
+        H(pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3, pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3) += Ji'*O*Ji;
+        H(pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3, pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3) += Ji'*O*Jj;
+        H(pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3, pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3) += Jj'*O*Ji;
+        H(pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3, pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3) += Jj'*O*Jj;
+        b(pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3) += Ji'*O*e;
+        b(pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3) += Jj'*O*e;
     end
-    %image = H~=0;
+    image = H~=0;
     %det(H)
     %figure();
     %imshow(val_image)

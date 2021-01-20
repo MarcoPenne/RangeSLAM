@@ -1,4 +1,4 @@
-function [e, J] = errorAndJacobianTransition(X, transition)
+function [e, Ji, Jj] = errorAndJacobianTransition(X, transition)
 
     global pose_index2id pose_id2index
     global N;
@@ -24,9 +24,9 @@ function [e, J] = errorAndJacobianTransition(X, transition)
         0  0  1];
     Ji = -Jj;
 
-    J = zeros(3, 3*N+2*M);
-    J(1:3, pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3) = Ji;
-    J(1:3, pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3) = Jj;
+    %J = zeros(3, 3*N+2*M);
+    %J(1:3, pose_id2index(pose_id_i)*3 - 2 : pose_id2index(pose_id_i)*3) = Ji;
+    %J(1:3, pose_id2index(pose_id_j)*3 - 2 : pose_id2index(pose_id_j)*3) = Jj;
 end
 
 function t = v2t(X)

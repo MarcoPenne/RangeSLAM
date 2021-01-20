@@ -1,4 +1,4 @@
-function [e, J] = errorAndJacobianMeasurement(X, measurement)
+function [e, Jr, Jl] = errorAndJacobianMeasurement(X, measurement)
 
     global pose_index2id pose_id2index landmark_index2id landmark_id2index
     global N;
@@ -14,7 +14,13 @@ function [e, J] = errorAndJacobianMeasurement(X, measurement)
     h = norm([x_r; y_r] - [x_l; y_l]);
     e = h - measurement.obs;
     
-    J = zeros(1, 3*N+2*M);
-    J(pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3) = double([(-x_l+x_r)/h (-y_l+y_r)/h 0]);
-    J(3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2) = double([(x_l-x_r)/h (y_l-y_r)/h]);
+    %if h<0.005
+    %    h = h+0.005;
+    %end
+    %J = zeros(1, 3*N+2*M);
+    %J(pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3) = [(-x_l+x_r)/h (-y_l+y_r)/h 0];
+    Jr = double([(-x_l+x_r)/h (-y_l+y_r)/h 0]);
+    %J(3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2) = [(x_l-x_r)/h (y_l-y_r)/h];
+    Jl = [(x_l-x_r)/h (y_l-y_r)/h];
+    
 end
