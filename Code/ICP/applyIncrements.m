@@ -1,4 +1,4 @@
-function [poses, landmarks] = applyIncrements(X, dx)
+function [X] = applyIncrements(X, dx)
 
     global pose_index2id, pose_id2index, landmark_index2id, landmark_id2index
     global N;
