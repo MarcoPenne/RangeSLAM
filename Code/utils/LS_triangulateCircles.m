@@ -1,6 +1,29 @@
-function point = LS_triangulateCircles(centers, radii)
+function [point, valid] = LS_triangulateCircles(centers, radii)
 
     % error_func = createErrorFunction(centers, radii);
+    % enought_dofs = centers;
+    % dm = distanceMatrix(centers);
+    
+    % to_eliminate = [];
+    % threshold = 0.1;
+    % for i=1:size(centers, 1)
+    %     for j=(i+1):size(centers, 1)
+
+    %         if dm(i, j) < threshold
+    %             to_eliminate(end+1) = j;
+    %         end
+    %     end
+    % end
+    
+    % enought_dofs(to_eliminate, :) = [];
+    
+    valid = true;
+    if size(centers, 1) < 3
+        valid = false;
+        point = [0, 0];
+        return
+    end
+
 
     % options = optimset('MaxIter', 1000);
     [radius_max, index_max] = max(radii);
