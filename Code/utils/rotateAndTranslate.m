@@ -1,10 +1,10 @@
-function [poses, landmarks] = rotateAndTranslate(poses, landmarks)
+function [poses, landmarks] = rotateAndTranslate(poses, landmarks, pose_1)
 
     v = [poses(1).x; poses(1).y; poses(1).theta];
 
     v = v2t(v);
     T = t_inverse(v);
-    T2 = v2t([-0.009456; 0.021667; -0.007264]);
+    T2 = v2t([pose_1.x; pose_1.y; pose_1.theta]);
     T = T2*T;
 
     for i=1:size(poses, 2)
