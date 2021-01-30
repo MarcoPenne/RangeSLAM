@@ -15,10 +15,10 @@ function [dx, chi_tot] = solveSingleICP(X, measurements, transitions, iteration)
         %printf("Processing measurement %d\n", i);
         pose_id = measurements(i).pose_id;
         land_id = measurements(i).landmark_id;
-        if landmark_id2index(land_id)~=0
+
+        if land_id<=size(landmark_id2index, 2) && landmark_id2index(land_id)~=0
             [e, Jr, Jl] = errorAndJacobianMeasurement(X, measurements(i));
             
-
             chi = e'*e;
             chi_tot = chi_tot + chi;
             value = 2 * exp(0.2*(iteration-10));
@@ -32,8 +32,8 @@ function [dx, chi_tot] = solveSingleICP(X, measurements, transitions, iteration)
             H(3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2, 3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2) += Jl'*O*Jl;
             b(pose_id2index(pose_id)*3 - 2 : pose_id2index(pose_id)*3) += Jr'*O*e;
             b(3*N + landmark_id2index(land_id)*2-1: 3*N + landmark_id2index(land_id)*2) += Jl'*O*e;
-            
-        end    
+
+        end
         
         %val_image(pose_id2index(measurements(i).pose_r.id)*2-1:pose_id2index(measurements(i).pose_r.id)*2, pose_id2index(measurements(i).pose_r.id)*2-1:pose_id2index(measurements(i).pose_r.id)*2)=ones(2,2);
         %val_image(2*N + landmark_id2index(measurements(i).landmark.id)*2-1: 2*N + landmark_id2index(measurements(i).landmark.id)*2, 2*N + landmark_id2index(measurements(i).landmark.id)*2-1: 2*N + landmark_id2index(measurements(i).landmark.id)*2) = ones(2,2);
