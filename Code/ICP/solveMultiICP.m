@@ -25,25 +25,33 @@ function [poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks,
     % landmarks=new_new_landmarks
 
     % Create mapping between indeces and IDs
-    global pose_index2id = zeros(1,size(poses,2));
+    global pose_index2id;
+    pose_index2id = zeros(1,size(poses,2));
     for i=1:size(poses,2)
         pose_index2id(i) = poses(i).id;
     end
-    global pose_id2index = zeros(1, pose_index2id(end));
+    global pose_id2index;
+    pose_id2index = zeros(1, pose_index2id(end));
     for i=1:size(pose_index2id, 2)
         pose_id2index(pose_index2id(i)) = i;
     end
-    global landmark_index2id = zeros(1,size(landmarks,2));
+    global landmark_index2id;
+    landmark_index2id = zeros(1,size(landmarks,2));
+    %size(landmark_index2id, 2)
+    
     for i=1:size(landmarks,2)
         landmark_index2id(i) = landmarks(i).id;
     end
-    global landmark_id2index = zeros(1, landmark_index2id(end));
+    global landmark_id2index;
+    landmark_id2index = zeros(1, landmark_index2id(end));
     for i=1:size(landmark_index2id, 2)
         landmark_id2index(landmark_index2id(i)) = i;
     end
-
-    global N = size(pose_index2id, 2);
-    global M = size(landmark_index2id, 2);
+    %landmark_id2index
+    global N;
+    N = size(pose_index2id, 2);
+    global M;
+    M = size(landmark_index2id, 2);
 
     X = zeros(N*3+M*2, 1);
     for i=1:size(poses,2)
