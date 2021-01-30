@@ -1,5 +1,5 @@
-function dm = distanceMatrix(centers)
-
+function dm = distanceMatrix(centers, radii)
+    centers = [centers radii];
     dm = zeros(size(centers, 1), size(centers, 1));
     for i=1:size(centers, 1)
         for j=i:size(centers, 1)
