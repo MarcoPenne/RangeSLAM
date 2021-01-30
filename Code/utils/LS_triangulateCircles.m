@@ -1,43 +1,31 @@
-function [point, valid] = LS_triangulateCircles(centers, radii)
-
-    % error_func = createErrorFunction(centers, radii);
-    % enought_dofs = centers;
-    % dm = distanceMatrix(centers);
+function [point, valid] = LS_triangulateCircles(centers, radii, threshold)
     
-    % to_eliminate = [];
-    % threshold = 0.1;
-    % for i=1:size(centers, 1)
-    %     for j=(i+1):size(centers, 1)
-
-    %         if dm(i, j) < threshold
-    %             to_eliminate(end+1) = j;
-    %         end
-    %     end
-    % end
+    point = [0, 0];
+    enought_dofs = centers;
+    dm = distanceMatrix(centers, radii);
     
-    % enought_dofs(to_eliminate, :) = [];
+    to_eliminate = [];
+    for i=1:size(centers, 1)
+        for j=(i+1):size(centers, 1)
+
+            % these two circles are too similar
+            if dm(i, j) < threshold
+                to_eliminate(end+1) = i;
+            end
+        end
+    end
+    
+    enought_dofs(to_eliminate, :) = [];
     
     valid = true;
-    if size(centers, 1) < 3
+    if size(enought_dofs, 1) < 3
         valid = false;
-        point = [0, 0];
         return
     end
 
-
-    % options = optimset('MaxIter', 1000);
-    [radius_max, index_max] = max(radii);
-    center_max = centers(index_max, :);
-    %point_max = fminsearch(error_func, center_max);
     [radius_min, index_min] = min(radii);
     center_min = centers(index_min, :);
-    % point_min = fminsearch(error_func, center_min);
-    % if error_func(point_min) <= error_func(point_max)
-    %     point = point_min;
-    % else
-    %     point = point_max;
-    % end
-
+    
     n_it=30;
     X = center_min';
     for i=1:n_it
@@ -70,11 +58,7 @@ function [point, valid] = LS_triangulateCircles(centers, radii)
         dx = dx;
         X = X+dx;
     end
-    X_min = X;
+    
+    point = X';
 
-    %if chi_min < chi_max
-        point = X_min';
-    %else
-    %    point = X_max';
-    %end
 end

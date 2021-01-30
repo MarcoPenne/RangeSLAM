@@ -1,4 +1,4 @@
-function landmarks = LS_landmarks_initialization(poses, observations)
+function landmarks = LS_landmarks_initialization(poses, observations, threshold)
     %landmark(id,[x_pose,y_pose]);
     circles = cell(1, 297);
     for i=1:size(observations, 2)
@@ -18,9 +18,10 @@ function landmarks = LS_landmarks_initialization(poses, observations)
     for i=1:size(circles, 2)
         info_circles = cell2mat(circles(i));
         if size(info_circles, 2)==3
-            landmark_init = LS_triangulateCircles(info_circles(:, 1:2), info_circles(:, 3));
-            landmarks(end+1) = landmark(i,landmark_init);
-            
+            [landmark_init, valid] = LS_triangulateCircles(info_circles(:, 1:2), info_circles(:, 3), threshold);
+            if valid
+                landmarks(end+1) = landmark(i,landmark_init);
+            end
         end
     end
 end
