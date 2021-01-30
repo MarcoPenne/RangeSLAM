@@ -67,13 +67,10 @@ function [poses_opt, landmarks_opt, chi_stats] = solveMultiICP(poses, landmarks,
     for i=1:n_iterations
         printf("iteration %d\n",i)
         
-        [dx, chi, image] = solveSingleICP(X, measurements, transitions, i);
+        [dx, chi] = solveSingleICP(X, measurements, transitions, i);
         chi_stats(end+1) = chi;
         X = boxPlus(X, dx);
     end
-    figure();
-    imshow(image);
-    title('H matrix')
     
     [poses_opt, landmarks_opt] = extractPosesAndLandmarksFromState(X);
     
